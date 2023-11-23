@@ -1,0 +1,223 @@
+version: "2.0"
+stories:
+
+
+- story: set login slot
+  steps:
+  - intent: login_data
+  - action: action_set_login_slots
+
+
+- story: leaves_service_module
+  steps:
+  - intent: leaves
+  - action: action_check_logged_for_leaves_service
+  
+- story: get leave eligibility story
+  steps:
+  - intent: leav_eli
+  - action: action_get_leave_eligibility
+
+- story: get leave balance story
+  steps:
+  - intent: leav_bal
+  - action: action_get_leave_balance
+
+- story: leave apply for pl2
+  steps:
+  - intent: leav_apply
+  - action: action_check_login_leave_apply
+  - slot_was_set:
+    - login_status: False
+  - action: utter_service_failed_login_message
+  
+- story: leave apply for
+  steps:
+  - intent: leav_apply
+  - action: action_check_login_leave_apply
+  - slot_was_set:
+    - login_status: True
+  - action: action_apply_leave_fill_details
+  - action: apply_leave_form
+  - active_loop: apply_leave_form
+  - active_loop: null
+  - action: action_apply_leave_form_submit
+  - action: action_form_value
+  
+
+- story: denying story
+  steps:
+  - intent: deny
+  - action: action_check_AR_FR
+
+- story: log out
+  steps:
+  - intent: logout
+  - action: action_restart
+  - slot_was_set:
+    - logout_status: false
+  - slot_was_set:
+    - emp_code: None
+  - slot_was_set:
+    - password: None
+
+
+
+- story: affirm story
+  steps:
+  - intent: affirm
+  - action: utter_leave_information
+
+- story: main_menu story
+  steps:
+  - intent: main_menu
+  - action: action_check_AR_FR
+
+- story: leave status 1
+  steps:
+  - intent: leav_status
+  - action: action_check_login_status_leave_status
+  - slot_was_set:
+    - login_status: True
+  - action: action_get_leave_status
+  
+- story: leave status 2
+  steps:
+  - intent: leav_status
+  - action: action_check_login_status_leave_status
+  - slot_was_set:
+    - login_status: False
+  - action: utter_service_failed_login_message
+  
+- story: Cancel_single_leave
+  steps:
+    - intent: Cancel_single_leave
+    - action: action_check_login_status_cancel_lr_id
+    - slot_was_set:
+      - login_status: True  
+    - action: action_myleavesdetails
+    - intent: cancel_with_lr_id
+    - action: action_cancel_lr_id_form_submit
+
+- story: Cancel_single_leave  
+  steps:
+    - intent: Cancel_single_leave
+    - action: action_check_login_status_cancel_lr_id
+    - slot_was_set:
+      - login_status: False 
+    - action: utter_service_failed_login_message
+
+# - story: cancel_with_lr_id
+#   steps:
+#     - intent: cancel_with_lr_id
+#     - action: action_check_login_status
+#     - slot_was_set:
+#       - login_status: True     
+#     - action: action_cancel_lr_id_form_submit
+    
+- story: cancel_with_lr_id  
+  steps:
+    - intent: cancel_with_lr_id
+    - action: action_check_login_status_cancel_lr_id
+    - slot_was_set:
+      - login_status: False  
+    - action: utter_service_failed_login_message
+
+# - story: cancel_leave_by_month_date
+#   steps:
+#     - intent: cancel_leave_by_month_date
+#     - action: action_check_login_status_cancel_lr_id
+#     - slot_was_set:
+#       - login_status: False
+#     - action: utter_service_failed_login_message
+    
+# ## cancel leave by month login true
+# - story: cancel_leave_by_month_date
+#   steps:
+#     - intent: cancel_leave_by_month_date
+#     - action: action_check_login_status_cancel_lr_id
+#     - slot_was_set:
+#       - login_status: True
+
+##login true  
+- story: cancel leave_by lr_id
+  steps:
+  - intent: leaves
+  - action: action_check_logged_for_leaves_service
+  - intent: Cancel_single_leave
+  - action: action_check_login_status_cancel_lr_id
+  - slot_was_set: 
+    - login_status: True
+  - action: action_myleavesdetails
+  - intent: cancel_with_lr_id
+  - action: action_cancel_lr_id_form_submit
+
+
+- story: Continue_leave_story
+  steps:
+  - intent: continue_apply_leave
+  - action: action_apply_leave_api
+
+
+- story: Continue_leave_story
+  steps:
+  - intent: cancel_leave
+  - action: action_abort_leave_value
+# - story: interactive_story_1
+#   steps:
+#   - intent: login_data
+#   - action: action_set_login_slots
+#   - slot_was_set:
+#     - emp_code: OMI-0085
+#   - slot_was_set:
+#     - password: Omfys@123
+#   - intent: leav_apply
+#   - action: action_check_login_leave_apply
+#   - slot_was_set:
+#     - login_status: true
+#   - action: action_apply_leave_fill_details
+#   - slot_was_set:
+#     - separate_detail: null
+#   - slot_was_set:
+#     - name2: null
+#   - action: apply_leave_form
+#   - active_loop: apply_leave_form
+#   - slot_was_set:
+#     - requested_slot: form_data
+#   - slot_was_set:
+#     - form_data: 2023-10-28|2023-10-28|LWP|d3emo|OMI-1038|demo|
+#   - slot_was_set:
+#     - requested_slot: null
+#   - active_loop: null
+#   - action: action_apply_leave_form_submit
+#   - slot_was_set:
+#     - start_date: '2023-10-28'
+#   - slot_was_set:
+#     - end_date: '2023-10-28'
+#   - slot_was_set:
+#     - leave_type: LWP
+#   - slot_was_set:
+#     - purpose: d3emo
+#   - slot_was_set:
+#     - hand_over_Employee: OMI-1038
+#   - slot_was_set:
+#     - knowledge_summary: demo
+#   - action: action_apply_leave_api
+#   - slot_was_set:
+#     - start_date: null
+#   - slot_was_set:
+#     - end_date: null
+#   - slot_was_set:
+#     - hand_over_Employee: null
+#   - slot_was_set:
+#     - knowledge_summary: null
+#   - slot_was_set:
+#     - leave_days: null
+#   - slot_was_set:
+#     - leave_type: null
+#   - slot_was_set:
+#     - one_day_leave: null
+#   - slot_was_set:
+#     - purpose: null
+#   - slot_was_set:
+#     - form_data: null
